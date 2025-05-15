@@ -33,7 +33,7 @@ st.header("🎤 上傳語音備註")
 audio_file = st.file_uploader("請上傳語音檔案（支援 wav / mp3 / m4a）", type=["wav", "mp3", "m4a"])
 
 if audio_file:
-    st.audio(audio_file, format="audio/wav")
+    st.audio(audio_file, format=audio_file.type)
 
     with st.spinner("🔊 Whisper 語音辨識中..."):
         try:
