@@ -3,7 +3,6 @@ import numpy as np
 import requests
 import base64
 import tempfile
-import sounddevice as sd
 import soundfile as sf
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 
