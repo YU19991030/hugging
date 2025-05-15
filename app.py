@@ -3,7 +3,7 @@ import requests
 import base64
 
 # ✅ 替換為你的後端 API 網址（ngrok 或 Render）
-API_BASE = " https://0f58-125-228-143-171.ngrok-free.app"
+API_BASE = " https://streamlit-ocr-whisper.onrender.com"
 
 st.set_page_config(page_title="📇 名片辨識系統", layout="centered")
 st.title("📷 拍照名片辨識")
