@@ -9,17 +9,20 @@ st.set_page_config(page_title="📇 名片辨識系統", layout="centered")
 st.title("📇 名片辨識 + 語音備註系統")
 
 # ---------------------
-# 📸 名片辨識功能區塊
+# 📸 名片辨識
 # ---------------------
 st.header("📷 拍照辨識名片")
-img_file = st.camera_input("請拍攝名片")
+img_file = st.camera_input("請拍攝名片")  # ✅ 即時拍照
 
 if img_file:
-    st.image(img_file, caption="名片預覽", use_column_width=True)
+    st.image(img_file, caption="📸 名片預覽", use_column_width=True)
 
     with st.spinner("🔍 OCR 辨識中..."):
         try:
-            files = {"file": img_file}
+            # ✅ 把 img_file 轉成 Multipart 可用格式傳給後端
+            files = {
+                "file": ("photo.jpg", img_file.getvalue(), "image/jpeg")
+            }
             res = requests.post(f"{API_BASE}/ocr", files=files)
             text = res.json().get("text", "")
             st.text_area("📄 名片辨識結果", value=text, height=200)
