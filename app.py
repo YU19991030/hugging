@@ -15,19 +15,19 @@ st.header("📷 拍照辨識名片")
 img_file = st.camera_input("請拍攝名片")  # ✅ 即時拍照
 
 if img_file:
-    st.image(img_file, caption="📸 名片預覽", use_column_width=True)
+    st.image(img_file, caption="名片預覽", use_container_width=True)
+    
+    img_bytes = img_file.getvalue()
+    base64_img = base64.b64encode(img_bytes).decode("utf-8")
+    payload = {"image": f"data:image/jpeg;base64,{base64_img}"}
 
     with st.spinner("🔍 OCR 辨識中..."):
         try:
-            # ✅ 把 img_file 轉成 Multipart 可用格式傳給後端
-            files = {
-                "file": ("photo.jpg", img_file.getvalue(), "image/jpeg")
-            }
-            res = requests.post(f"{API_BASE}/ocr", files=files)
+            res = requests.post(f"{API_BASE}/ocr", json=payload)
             text = res.json().get("text", "")
             st.text_area("📄 名片辨識結果", value=text, height=200)
         except Exception as e:
-            st.error(f"❌ OCR 發生錯誤：{e}")
+            st.error(f"❌ OCR 發生錯誤：{e}"
 
 # ---------------------
 # 🎤 語音備註功能區塊
