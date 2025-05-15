@@ -13,7 +13,7 @@ st.header("📷 拍照辨識名片")
 img_file = st.camera_input("請拍攝名片")
 
 if img_file:
-    st.image(img_file, caption="名片預覽", use_column_width=True)
+    st.image(img_file, caption="名片預覽", use_container_width=True)
     with st.spinner("🔍 OCR 辨識中..."):
         try:
             files = {"file": ("image.jpg", img_file.getvalue(), "image/jpeg")}
