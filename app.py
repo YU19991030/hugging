@@ -27,7 +27,7 @@ if img_file:
             text = res.json().get("text", "")
             st.text_area("📄 名片辨識結果", value=text, height=200)
         except Exception as e:
-            st.error(f"❌ OCR 發生錯誤：{e}"
+            st.error(f"❌ OCR 發生錯誤：{e}")
 
 # ---------------------
 # 🎤 語音備註功能區塊
