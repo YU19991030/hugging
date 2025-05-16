@@ -1,4 +1,4 @@
 streamlit
 requests
 pillow
-streamlit-audiorecorder
+audio-recorder-streamlit
