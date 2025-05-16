@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-from streamlit_audiorecorder import audiorecorder
+from audio_recorder_streamlit import audio_recorder
 
 API_BASE = "https://streamlit-ocr-whisper.onrender.com"
 
@@ -34,13 +34,13 @@ if img_files:
 # 🎤 語音備註錄音（streamlit-audiorecorder）
 # ------------------------
 st.header("🎤 語音備註錄音")
-audio = audiorecorder("▶️ 開始錄音", "⏹️ 停止錄音")
+audio = audio_recorder()
 
-if audio is not None and len(audio) > 0:
+if audio:
     st.audio(audio, format="audio/wav")
     with st.spinner("🔊 Whisper 語音辨識中..."):
         try:
-            files = {"file": ("audio.wav", audio.tobytes(), "audio/wav")}
+            files = {"file": ("audio.wav", audio, "audio/wav")}
             res = requests.post(f"{API_BASE}/whisper", files=files)
             res.raise_for_status()
             transcript = res.json().get("text", "")
