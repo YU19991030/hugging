@@ -7,34 +7,37 @@ st.set_page_config(page_title="📇 名片辨識系統", layout="centered")
 st.title("📇 名片辨識 + 語音備註系統")
 
 # ------------------------
-# 📷 名片 OCR 拍照上傳
+# 📤 上傳多張名片圖片
 # ------------------------
-st.header("📷 拍照辨識名片")
-img_file = st.camera_input("請拍攝名片")
+st.header("📤 上傳名片圖片（支援多張）")
+img_files = st.file_uploader("請上傳名片圖片（支援 jpg/png）", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
 
-if img_file:
-    st.image(img_file, caption="名片預覽", use_container_width=True)
-    with st.spinner("🔍 OCR 辨識中..."):
-        try:
-            files = {"file": ("image.jpg", img_file.getvalue(), "image/jpeg")}
-            res = requests.post(f"{API_BASE}/ocr", files=files)
-            res.raise_for_status()
-            text = res.json().get("text", "")
-            st.text_area("📄 名片辨識結果", value=text, height=200)
-        except Exception as e:
-            st.error(f"❌ OCR 發生錯誤：{e}")
+if img_files:
+    for img_file in img_files:
+        st.image(img_file, caption=f"預覽：{img_file.name}", use_container_width=True)
+        with st.spinner(f"🔍 OCR 辨識中：{img_file.name}"):
+            try:
+                files = {"file": (img_file.name, img_file.getvalue(), img_file.type)}
+                res = requests.post(f"{API_BASE}/ocr", files=files)
+                res.raise_for_status()
+                text = res.json().get("text", "")
+                st.text_area(f"📄 {img_file.name} 辨識結果", value=text, height=150)
+            except Exception as e:
+                st.error(f"❌ OCR 發生錯誤：{e}")
 
 # ------------------------
-# 🎤 上傳語音備註
+# 🎤 語音備註錄音（streamlit-audiorecorder）
 # ------------------------
-st.header("🎤 上傳語音備註")
-audio_file = st.file_uploader("請上傳語音檔案（支援 wav / mp3 / m4a）", type=["wav", "mp3", "m4a"])
+from streamlit_audiorecorder import audiorecorder
 
-if audio_file:
-    st.audio(audio_file, format="audio/wav")
+st.header("🎤 語音備註錄音")
+audio = audiorecorder("▶️ 開始錄音", "⏹️ 停止錄音")
+
+if len(audio) > 0:
+    st.audio(audio, format="audio/wav")
     with st.spinner("🔊 Whisper 語音辨識中..."):
         try:
-            files = {"file": (audio_file.name, audio_file.getvalue(), audio_file.type)}
+            files = {"file": ("audio.wav", audio.tobytes(), "audio/wav")}
             res = requests.post(f"{API_BASE}/whisper", files=files)
             res.raise_for_status()
             transcript = res.json().get("text", "")
