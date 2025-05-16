@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+from streamlit_audiorecorder import audiorecorder
 
 API_BASE = "https://streamlit-ocr-whisper.onrender.com"
 
@@ -7,10 +8,14 @@ st.set_page_config(page_title="📇 名片辨識系統", layout="centered")
 st.title("📇 名片辨識 + 語音備註系統")
 
 # ------------------------
-# 📤 上傳多張名片圖片
+# 📄 上傳多張名片圖片
 # ------------------------
-st.header("📤 上傳名片圖片（支援多張）")
-img_files = st.file_uploader("請上傳名片圖片（支援 jpg/png）", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+st.header("📄 上傳名片圖片（支援多張）")
+img_files = st.file_uploader(
+    "請上傳名片圖片（支援 jpg/png）",
+    type=["jpg", "jpeg", "png"],
+    accept_multiple_files=True
+)
 
 if img_files:
     for img_file in img_files:
@@ -28,12 +33,10 @@ if img_files:
 # ------------------------
 # 🎤 語音備註錄音（streamlit-audiorecorder）
 # ------------------------
-from streamlit_audiorecorder import audiorecorder
-
 st.header("🎤 語音備註錄音")
 audio = audiorecorder("▶️ 開始錄音", "⏹️ 停止錄音")
 
-if len(audio) > 0:
+if audio is not None and len(audio) > 0:
     st.audio(audio, format="audio/wav")
     with st.spinner("🔊 Whisper 語音辨識中..."):
         try:
